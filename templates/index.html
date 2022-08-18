@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h2> <b>Gerenciamento de Jogos</b> <button type="button" class="btn btn-success float-end"
+                        data-bs-toggle="modal" data-bs-target="#mymodal">Adicionar novo jogo</button> </h2>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close float-end" data-bs-dismiss="alert" aria-label="close">
+                        <span class="icon">x</span>
+                    </button>
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <td>ID</td>
+                        <td>Nome</td>
+                        <td>Plataforma</td>
+                        <td>Ano</td>
+                        <td>Ação</td>
+                    </tr>
+                    {% for row in employees %}
+                    <tr>
+                        <td>{{row.id}}</td>
+                        <td>{{row.nome}}</td>
+                        <td>{{row.plataforma}}</td>
+                        <td>{{row.ano}}</td>
+                        <td>
+                            <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-bs-toggle="modal"
+                                data-bs-target="#modaledit{{row.id}}">Editar</a>
+                            <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs"
+                                onclick="return confirm('Tem certeza que deseja deletar esse jogo')">Deletar</a>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="modaledit{{row.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Edição de jogo</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('update')}}" method="POST">
+                                        <div class="form-group">
+                                            <label>Nome</label>
+                                            <input type="hidden" name="id" value="{{row.id}}">
+                                            <input type="text" class="form-control" name="nome" value="{{row.nome}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Plataforma</label>
+                                            <input type="text" class="form-control" name="plataforma"
+                                                value="{{row.plataforma}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ano</label>
+                                            <input type="number" class="form-control" name="ano" value="{{row.ano}}">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Salvar</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancelar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="modal fade" id="mymodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Cadastro de jogos</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert')}}" method="POST">
+                                <div class="form-group">
+                                    <label>Nome</label>
+                                    <input type="text" class="form-control" name="nome" required='1'>
+                                </div>
+                                <div class="form-group">
+                                    <label>Plataforma</label>
+                                    <input type="text" class="form-control" name="plataforma" required='1'>
+                                </div>
+                                <div class="form-group">
+                                    <label>Ano</label>
+                                    <input type="number" class="form-control" name="ano" required='1'>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                    <button type="button" class="btn btn-secondary float-end"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
